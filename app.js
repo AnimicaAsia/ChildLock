@@ -107,7 +107,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 alert('Saved to Cloud! Use the Raw URL in your browser config.');
             } else {
-                throw new Error('Failed to save to Gist');
+                const errData = await response.json().catch(() => ({}));
+                throw new Error(errData.message || `API Error: ${response.status}`);
             }
         } catch (err) {
             alert('Error: ' + err.message);
