@@ -111,7 +111,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error(errData.message || `API Error: ${response.status}`);
             }
         } catch (err) {
-            alert('Error: ' + err.message);
+            let msg = err.message;
+            if (msg.includes('Resource not accessible')) {
+                msg += " (Ensure your GitHub Token has the 'gist' scope enabled)";
+            }
+            alert('Error: ' + msg);
             cloudStatus.innerHTML = 'Status: <span class="status-offline">Error</span>';
         } finally {
             saveCloudBtn.textContent = 'Save to Cloud & Sync';
