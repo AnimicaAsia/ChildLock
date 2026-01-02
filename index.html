@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Child Lock Cloud Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <header>
+            <div class="header-content">
+                <div class="logo">
+                    <span class="logo-icon">☁️</span>
+                    <h1>Cloud Control <span>Dashboard</span></h1>
+                </div>
+                <div class="cloud-status" id="cloudStatus">
+                    Status: <span class="status-offline">Not Connected</span>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <!-- Cloud Connection Panel -->
+            <section class="card config-panel">
+                <h2>Cloud Persistence (GitHub Gist)</h2>
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label for="ghToken">GitHub Personal Access Token (Gist Scope)</label>
+                        <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxx">
+                    </div>
+                    <div class="input-group">
+                        <label for="gistId">Gist ID (Leave blank to create new)</label>
+                        <input type="text" id="gistId" placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
+                    </div>
+                </div>
+                <div class="panel-actions">
+                    <button id="loadCloudBtn" class="secondary-btn">Load from Cloud</button>
+                    <button id="saveCloudBtn" class="primary-btn">Save to Cloud & Sync</button>
+                </div>
+                <p class="help-text">Your settings are saved to a GitHub Gist. The browser fetches the "Raw Gist URL" on
+                    startup.</p>
+            </section>
+
+            <div class="card-grid">
+                <!-- Global Settings -->
+                <section class="card">
+                    <h2>Global Settings</h2>
+                    <div class="input-group">
+                        <label for="browserTitle">Browser Window Title</label>
+                        <input type="text" id="browserTitle" placeholder="School Protected Browser">
+                    </div>
+                    <div class="input-group">
+                        <label for="homepage">Homepage URL</label>
+                        <input type="url" id="homepage" placeholder="https://edu.google.com">
+                    </div>
+                </section>
+
+                <!-- Blocked Sites -->
+                <section class="card">
+                    <h2>Blocked Sites</h2>
+                    <div class="list-builder">
+                        <div class="inline-input">
+                            <input type="text" id="siteInput" placeholder="e.g. youtube.com">
+                            <button id="addSiteBtn">Add</button>
+                        </div>
+                        <ul id="blockedSitesList" class="builder-list"></ul>
+                    </div>
+                </section>
+
+                <!-- Cloud Bookmarks -->
+                <section class="card">
+                    <h2>Cloud Bookmarks</h2>
+                    <div class="list-builder">
+                        <div class="multi-input">
+                            <input type="text" id="bmTitle" placeholder="Title">
+                            <input type="url" id="bmUrl" placeholder="URL">
+                            <button id="addBmBtn">Add Bookmark</button>
+                        </div>
+                        <ul id="bookmarksList" class="builder-list"></ul>
+                    </div>
+                </section>
+
+                <!-- Link Panel -->
+                <section class="card preview-card" id="linkPanel" style="display:none;">
+                    <h2>Browser Setup Instruction</h2>
+                    <p>Paste this URL into your browser's <code>config.json</code>:</p>
+                    <div class="copy-box">
+                        <input type="text" id="rawUrl" readonly>
+                        <button id="copyUrlBtn">Copy</button>
+                    </div>
+                </section>
+
+                <!-- JSON Preview -->
+                <section class="card preview-card">
+                    <h2>Live config.json Preview</h2>
+                    <pre id="jsonPreview"></pre>
+                </section>
+            </div>
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+
+</html>
