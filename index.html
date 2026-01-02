@@ -24,25 +24,20 @@
         </header>
 
         <main>
-            <!-- Cloud Connection Panel -->
+            <!-- Private Cloud Connection -->
             <section class="card config-panel">
-                <h2>Cloud Persistence (GitHub Gist)</h2>
-                <div class="input-grid">
-                    <div class="input-group">
-                        <label for="ghToken">GitHub Personal Access Token (Gist Scope)</label>
-                        <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxx">
-                    </div>
-                    <div class="input-group">
-                        <label for="gistId">Gist ID (Leave blank to create new)</label>
-                        <input type="text" id="gistId" placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
-                    </div>
+                <h2>Cloud Synchronization</h2>
+                <div class="input-group">
+                    <label for="ghToken">GitHub Personal Access Token (Gist Scope)</label>
+                    <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxx">
+                </div>
+                <div class="panel-info">
+                    <p>Connected to private Gist: <code>bcb0a13...</code></p>
                 </div>
                 <div class="panel-actions">
-                    <button id="loadCloudBtn" class="secondary-btn">Load from Cloud</button>
-                    <button id="saveCloudBtn" class="primary-btn">Save to Cloud & Sync</button>
+                    <button id="loadCloudBtn" class="secondary-btn">Load Current Rules</button>
+                    <button id="saveCloudBtn" class="primary-btn">Save & Publish Rules</button>
                 </div>
-                <p class="help-text">Your settings are saved to a GitHub Gist. The browser fetches the "Raw Gist URL" on
-                    startup.</p>
             </section>
 
             <div class="card-grid">

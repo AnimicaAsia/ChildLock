@@ -19,8 +19,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const addBmBtn = document.getElementById('addBmBtn');
     const bookmarksList = document.getElementById('bookmarksList');
     const jsonPreview = document.getElementById('jsonPreview');
+    // Hardcoded Gist ID (Safe)
+    const CLOUD_GIST_ID = "bcb0a130b9ee68d7ad56011ac4c2ebcb";
+
     const ghTokenInput = document.getElementById('ghToken');
-    const gistIdInput = document.getElementById('gistId');
     const loadCloudBtn = document.getElementById('loadCloudBtn');
     const saveCloudBtn = document.getElementById('saveCloudBtn');
     const cloudStatus = document.getElementById('cloudStatus');
@@ -28,9 +30,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const rawUrlInput = document.getElementById('rawUrl');
     const copyUrlBtn = document.getElementById('copyUrlBtn');
 
-    // Persistence Logic (Local Storage for Token/ID)
+    // Persistence Logic (Local Storage for Token)
     ghTokenInput.value = localStorage.getItem('gh_token') || '';
-    gistIdInput.value = localStorage.getItem('gist_id') || '';
 
     function updatePreview() {
         jsonPreview.textContent = JSON.stringify(config, null, 2);
@@ -59,12 +60,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Gist Interaction
     async function saveToCloud() {
         const token = ghTokenInput.value.trim();
-        const gistId = gistIdInput.value.trim();
+        const gistId = CLOUD_GIST_ID;
 
         if (!token) {
-            alert('Please enter a GitHub Token');
+            alert('Please enter your GitHub Token');
             return;
         }
+
+        localStorage.setItem('gh_token', token);
 
         saveCloudBtn.textContent = 'Saving...';
         saveCloudBtn.disabled = true;
@@ -86,18 +89,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch(url, {
                 method,
                 headers: {
-                    'Authorization': `token ${token}`,
-                    'Content-Type': 'application/json'
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/vnd.github+json'
                 },
                 body: JSON.stringify(body)
             });
 
             if (response.ok) {
                 const data = await response.json();
-                gistIdInput.value = data.id;
-                localStorage.setItem('gh_token', token);
-                localStorage.setItem('gist_id', data.id);
-
                 cloudStatus.innerHTML = 'Status: <span class="status-online">Connected</span>';
 
                 // Show raw URL
@@ -125,17 +125,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function loadFromCloud() {
         const token = ghTokenInput.value.trim();
-        const gistId = gistIdInput.value.trim();
+        const gistId = CLOUD_GIST_ID;
 
-        if (!token || !gistId) {
-            alert('Need Token and Gist ID to load');
+        if (!token) {
+            alert('Please enter your GitHub Token to load');
             return;
         }
 
         loadCloudBtn.textContent = 'Loading...';
         try {
             const response = await fetch(`https://api.github.com/gists/${gistId}`, {
-                headers: { 'Authorization': `token ${token}` }
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Accept': 'application/vnd.github+json'
+                }
             });
             if (response.ok) {
                 const data = await response.json();
