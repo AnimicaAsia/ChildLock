@@ -5,7 +5,10 @@ document.addEventListener('DOMContentLoaded', () => {
         browser_title: "School Protected Browser",
         cloud_bookmarks: [
             { title: "Google Classroom", url: "https://classroom.google.com", folder: "Cloud" }
-        ]
+        ],
+        whitelist_mode: false,
+        allowed_sites: [],
+        warning_volume: 100
     };
 
     // DOM Elements
@@ -29,6 +32,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const linkPanel = document.getElementById('linkPanel');
     const rawUrlInput = document.getElementById('rawUrl');
     const copyUrlBtn = document.getElementById('copyUrlBtn');
+
+    // Whitelist Mode Elements
+    const whitelistModeToggle = document.getElementById('whitelistMode');
+    const whitelistPanel = document.getElementById('whitelistPanel');
+    const allowedSiteInput = document.getElementById('allowedSiteInput');
+    const timeLimitInput = document.getElementById('timeLimitInput');
+    const addAllowedSiteBtn = document.getElementById('addAllowedSiteBtn');
+    const allowedSitesList = document.getElementById('allowedSitesList');
+    const warningVolumeInput = document.getElementById('warningVolume');
+    const volumeValueSpan = document.getElementById('volumeValue');
 
     // Persistence Logic (Local Storage for Token)
     ghTokenInput.value = localStorage.getItem('gh_token') || '';
@@ -55,6 +68,22 @@ document.addEventListener('DOMContentLoaded', () => {
             bookmarksList.appendChild(li);
         });
         updatePreview();
+    }
+
+    function renderAllowedSites() {
+        allowedSitesList.innerHTML = '';
+        config.allowed_sites.forEach((site, index) => {
+            const li = document.createElement('li');
+            const timeText = site.time_limit ? ` (${site.time_limit} min)` : '';
+            li.innerHTML = `<span>${site.url}${timeText}</span><button data-index="${index}">Delete</button>`;
+            allowedSitesList.appendChild(li);
+        });
+        updatePreview();
+    }
+
+    function updateWhitelistUI() {
+        whitelistModeToggle.checked = config.whitelist_mode;
+        whitelistPanel.style.opacity = config.whitelist_mode ? '1' : '0.5';
     }
 
     // Gist Interaction
@@ -148,6 +177,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 homepageInput.value = config.homepage;
                 renderBlockedSites();
                 renderBookmarks();
+                renderAllowedSites();
+                updateWhitelistUI();
+                warningVolumeInput.value = config.warning_volume || 100;
+                volumeValueSpan.textContent = (config.warning_volume || 100) + '%';
 
                 rawUrlInput.value = data.files['config.json'].raw_url;
                 linkPanel.style.display = 'block';
@@ -186,7 +219,38 @@ document.addEventListener('DOMContentLoaded', () => {
         alert('URL Copied to clipboard!');
     });
 
+    // Whitelist Mode Event Listeners
+    whitelistModeToggle.addEventListener('change', (e) => {
+        config.whitelist_mode = e.target.checked;
+        updateWhitelistUI();
+        updatePreview();
+    });
+    addAllowedSiteBtn.addEventListener('click', () => {
+        const url = allowedSiteInput.value.trim();
+        const timeLimit = timeLimitInput.value ? parseInt(timeLimitInput.value) : null;
+        if (url) {
+            config.allowed_sites.push({ url, time_limit: timeLimit });
+            allowedSiteInput.value = '';
+            timeLimitInput.value = '';
+            renderAllowedSites();
+        }
+    });
+    allowedSitesList.addEventListener('click', (e) => {
+        if (e.target.tagName === 'BUTTON') {
+            config.allowed_sites.splice(e.target.dataset.index, 1);
+            renderAllowedSites();
+        }
+    });
+
+    warningVolumeInput.addEventListener('input', (e) => {
+        config.warning_volume = parseInt(e.target.value);
+        volumeValueSpan.textContent = config.warning_volume + '%';
+        updatePreview();
+    });
+
     // Initial render
     renderBlockedSites();
     renderBookmarks();
+    renderAllowedSites();
+    updateWhitelistUI();
 });

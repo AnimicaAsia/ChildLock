@@ -52,11 +52,40 @@
                         <label for="homepage">Homepage URL</label>
                         <input type="url" id="homepage" placeholder="https://edu.google.com">
                     </div>
+                    <div class="input-group">
+                        <label for="warningVolume">Warning Audio Volume (%)</label>
+                        <input type="range" id="warningVolume" min="0" max="100" value="100" step="5">
+                        <span id="volumeValue">100%</span>
+                    </div>
+                </section>
+
+                <!-- Whitelist Mode (Block All) -->
+                <section class="card">
+                    <h2>🔒 Whitelist Mode (Block All)</h2>
+                    <div class="toggle-group">
+                        <label class="toggle">
+                            <input type="checkbox" id="whitelistMode">
+                            <span class="slider"></span>
+                        </label>
+                        <span>Enable Whitelist Mode (Block everything except allowed sites + Google)</span>
+                    </div>
+                    <div class="list-builder" id="whitelistPanel">
+                        <p class="helper-text">When enabled, ONLY the sites below (plus Google Search) will be
+                            accessible.</p>
+                        <div class="multi-input">
+                            <input type="text" id="allowedSiteInput" placeholder="e.g. khanacademy.org">
+                            <input type="number" id="timeLimitInput" placeholder="Time (mins, optional)" min="1"
+                                style="width:120px;">
+                            <button id="addAllowedSiteBtn">Add</button>
+                        </div>
+                        <ul id="allowedSitesList" class="builder-list"></ul>
+                    </div>
                 </section>
 
                 <!-- Blocked Sites -->
                 <section class="card">
                     <h2>Blocked Sites</h2>
+                    <p class="helper-text">(Only used when Whitelist Mode is OFF)</p>
                     <div class="list-builder">
                         <div class="inline-input">
                             <input type="text" id="siteInput" placeholder="e.g. youtube.com">
