@@ -7,8 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { title: "Google Classroom", url: "https://classroom.google.com", folder: "Cloud" }
         ],
         whitelist_mode: false,
-        allowed_sites: [],
-        warning_volume: 100
+        allowed_sites: []
     };
 
     // DOM Elements
@@ -40,8 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const timeLimitInput = document.getElementById('timeLimitInput');
     const addAllowedSiteBtn = document.getElementById('addAllowedSiteBtn');
     const allowedSitesList = document.getElementById('allowedSitesList');
-    const warningVolumeInput = document.getElementById('warningVolume');
-    const volumeValueSpan = document.getElementById('volumeValue');
 
     // Persistence Logic (Local Storage for Token)
     ghTokenInput.value = localStorage.getItem('gh_token') || '';
@@ -179,8 +176,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 renderBookmarks();
                 renderAllowedSites();
                 updateWhitelistUI();
-                warningVolumeInput.value = config.warning_volume || 100;
-                volumeValueSpan.textContent = (config.warning_volume || 100) + '%';
 
                 rawUrlInput.value = data.files['config.json'].raw_url;
                 linkPanel.style.display = 'block';
@@ -240,12 +235,6 @@ document.addEventListener('DOMContentLoaded', () => {
             config.allowed_sites.splice(e.target.dataset.index, 1);
             renderAllowedSites();
         }
-    });
-
-    warningVolumeInput.addEventListener('input', (e) => {
-        config.warning_volume = parseInt(e.target.value);
-        volumeValueSpan.textContent = config.warning_volume + '%';
-        updatePreview();
     });
 
     // Initial render
