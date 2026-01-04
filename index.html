@@ -10,7 +10,20 @@
 </head>
 
 <body>
-    <div class="app-container">
+    <!-- Login Overlay -->
+    <div id="loginOverlay" class="login-overlay">
+        <div class="login-card">
+            <div class="login-icon">🔐</div>
+            <h2>Admin Access Required</h2>
+            <p>Enter password to access the control panel</p>
+            <input type="password" id="loginPassword" placeholder="Enter password"
+                onkeypress="if(event.key==='Enter') checkPassword()">
+            <button onclick="checkPassword()" class="primary-btn" style="width: 100%; margin-top: 12px;">Unlock</button>
+            <p id="loginError" class="login-error"></p>
+        </div>
+    </div>
+
+    <div class="app-container" id="mainApp" style="display: none;">
         <header>
             <div class="header-content">
                 <div class="logo">
@@ -135,6 +148,29 @@
             </div>
         </main>
     </div>
+    <script>
+        const ADMIN_PASSWORD = 'onionismylove';
+
+        // Check if already logged in this session
+        if (sessionStorage.getItem('adminLoggedIn') === 'true') {
+            document.getElementById('loginOverlay').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'block';
+        }
+
+        function checkPassword() {
+            const input = document.getElementById('loginPassword').value;
+            const errorEl = document.getElementById('loginError');
+
+            if (input === ADMIN_PASSWORD) {
+                sessionStorage.setItem('adminLoggedIn', 'true');
+                document.getElementById('loginOverlay').style.display = 'none';
+                document.getElementById('mainApp').style.display = 'block';
+            } else {
+                errorEl.textContent = '❌ Incorrect password. Try again.';
+                document.getElementById('loginPassword').value = '';
+            }
+        }
+    </script>
     <script src="app.js"></script>
 </body>
 
