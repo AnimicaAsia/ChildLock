@@ -154,13 +154,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const gistId = CLOUD_GIST_ID;
 
         if (!token) {
-            alert('Please enter your GitHub Token to load');
+            alert('Please enter your GitHub Token and ensure the Gist ID is correct.');
             return;
         }
 
-        loadCloudBtn.textContent = 'Loading...';
+        loadCloudBtn.textContent = '🔄 Loading...';
         try {
-            const response = await fetch(`https://api.github.com/gists/${gistId}`, {
+            // Add cache-buster to Gist API request
+            const cacheBuster = `?t=${Date.now()}`;
+            const response = await fetch(`https://api.github.com/gists/${gistId}${cacheBuster}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Accept': 'application/vnd.github+json'
@@ -168,10 +170,14 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             if (response.ok) {
                 const data = await response.json();
-                config = JSON.parse(data.files['config.json'].content);
+                const remoteConfig = JSON.parse(data.files['config.json'].content);
 
-                browserTitleInput.value = config.browser_title;
-                homepageInput.value = config.homepage;
+                // Update local config
+                config = { ...config, ...remoteConfig };
+
+                // Update UI elements
+                browserTitleInput.value = config.browser_title || '';
+                homepageInput.value = config.homepage || '';
                 renderBlockedSites();
                 renderBookmarks();
                 renderAllowedSites();
@@ -180,11 +186,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 rawUrlInput.value = data.files['config.json'].raw_url;
                 linkPanel.style.display = 'block';
                 cloudStatus.innerHTML = 'Status: <span class="status-online">Connected</span>';
+                console.log('Successfully loaded config from Cloud:', config);
+            } else {
+                throw new Error(`Failed to load: ${response.statusText}`);
             }
         } catch (err) {
+            console.error('Cloud Load Error:', err);
             alert('Load failed: ' + err.message);
         } finally {
-            loadCloudBtn.textContent = 'Load from Cloud';
+            loadCloudBtn.textContent = '🔄 Refresh Data';
         }
     }
 

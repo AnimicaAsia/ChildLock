@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Child Lock Cloud Dashboard</title>
+    <title>Cloud Control | Child Lock Browser</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -14,108 +14,105 @@
         <header>
             <div class="header-content">
                 <div class="logo">
-                    <span class="logo-icon">☁️</span>
-                    <h1>Cloud Control <span>Dashboard</span></h1>
+                    <span class="logo-icon">🚀</span>
+                    <h1>Cloud Control <span>Admin Dashboard</span></h1>
                 </div>
                 <div class="cloud-status" id="cloudStatus">
-                    Status: <span class="status-offline">Not Connected</span>
+                    Status: <span class="status-offline">Disconnected</span>
                 </div>
             </div>
         </header>
 
         <main>
-            <!-- Private Cloud Connection -->
+            <!-- Synchronization Panel -->
             <section class="card config-panel">
-                <h2>Cloud Synchronization</h2>
-                <div class="input-group">
-                    <label for="ghToken">GitHub Personal Access Token (Gist Scope)</label>
-                    <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxx">
+                <h2>📡 Cloud Synchronization</h2>
+                <div class="card-grid" style="grid-template-columns: 1fr 1fr; gap: 20px; align-items: end;">
+                    <div class="input-group">
+                        <label for="ghToken">GitHub Personal Access Token</label>
+                        <input type="password" id="ghToken" placeholder="ghp_your_secret_token">
+                    </div>
+                    <div class="panel-actions">
+                        <button id="loadCloudBtn" class="secondary-btn">🔄 Refresh Data</button>
+                        <button id="saveCloudBtn" class="primary-btn">💾 Save & Sync Now</button>
+                    </div>
                 </div>
-                <div class="panel-info">
-                    <p>Connected to private Gist: <code>bcb0a13...</code></p>
-                </div>
-                <div class="panel-actions">
-                    <button id="loadCloudBtn" class="secondary-btn">Load Current Rules</button>
-                    <button id="saveCloudBtn" class="primary-btn">Save & Publish Rules</button>
-                </div>
+                <p class="help-text">Your settings are saved privately to Gist ID: <code>bcb0a13...</code></p>
             </section>
 
             <div class="card-grid">
-                <!-- Global Settings -->
+                <!-- Global Look -->
                 <section class="card">
-                    <h2>Global Settings</h2>
+                    <h2>🎨 Browser Appearance</h2>
                     <div class="input-group">
-                        <label for="browserTitle">Browser Window Title</label>
-                        <input type="text" id="browserTitle" placeholder="School Protected Browser">
+                        <label for="browserTitle">Custom Window Title</label>
+                        <input type="text" id="browserTitle" placeholder="e.g. My Secure Browser">
                     </div>
                     <div class="input-group">
-                        <label for="homepage">Homepage URL</label>
+                        <label for="homepage">Default Homepage</label>
                         <input type="url" id="homepage" placeholder="https://edu.google.com">
                     </div>
                 </section>
 
-                <!-- Whitelist Mode (Block All) -->
+                <!-- Time Limits & Access -->
                 <section class="card">
-                    <h2>🔒 Whitelist Mode (Block All)</h2>
+                    <h2>⏳ Time Limits & Access</h2>
                     <div class="toggle-group">
                         <label class="toggle">
                             <input type="checkbox" id="whitelistMode">
                             <span class="slider"></span>
                         </label>
-                        <span>Enable Whitelist Mode (Block everything except allowed sites + Google)</span>
+                        <span style="font-weight: 600;">Enable Strict Whitelist</span>
                     </div>
-                    <div class="list-builder" id="whitelistPanel">
-                        <p class="helper-text">When enabled, ONLY the sites below (plus Google Search) will be
-                            accessible.</p>
-                        <div class="multi-input">
-                            <input type="text" id="allowedSiteInput" placeholder="e.g. khanacademy.org">
-                            <input type="number" id="timeLimitInput" placeholder="Time (mins, optional)" min="1"
-                                style="width:120px;">
-                            <button id="addAllowedSiteBtn">Add</button>
+                    <p class="helper-text">Add sites here to track time or allow them in Whitelist mode.</p>
+                    <div class="multi-input" id="whitelistPanel">
+                        <input type="text" id="allowedSiteInput" placeholder="Site (e.g. google.com)">
+                        <div style="display: flex; gap: 8px;">
+                            <input type="number" id="timeLimitInput" placeholder="Daily Limit (mins)" min="1"
+                                style="flex: 1;">
+                            <button id="addAllowedSiteBtn" style="flex: 0 0 80px;">ADD</button>
                         </div>
-                        <ul id="allowedSitesList" class="builder-list"></ul>
                     </div>
+                    <ul id="allowedSitesList" class="builder-list"></ul>
                 </section>
 
-                <!-- Blocked Sites -->
+                <!-- Blacklist -->
                 <section class="card">
-                    <h2>Blocked Sites</h2>
-                    <p class="helper-text">(Only used when Whitelist Mode is OFF)</p>
-                    <div class="list-builder">
-                        <div class="inline-input">
-                            <input type="text" id="siteInput" placeholder="e.g. youtube.com">
-                            <button id="addSiteBtn">Add</button>
-                        </div>
-                        <ul id="blockedSitesList" class="builder-list"></ul>
+                    <h2>🚫 Blocked Sites</h2>
+                    <p class="helper-text">Strictly block these sites when Whitelist is OFF.</p>
+                    <div class="inline-input">
+                        <input type="text" id="siteInput" placeholder="e.g. facebook.com">
+                        <button id="addSiteBtn">BLOCK</button>
                     </div>
+                    <ul id="blockedSitesList" class="builder-list"></ul>
                 </section>
 
                 <!-- Cloud Bookmarks -->
                 <section class="card">
-                    <h2>Cloud Bookmarks</h2>
-                    <div class="list-builder">
-                        <div class="multi-input">
-                            <input type="text" id="bmTitle" placeholder="Title">
-                            <input type="url" id="bmUrl" placeholder="URL">
-                            <button id="addBmBtn">Add Bookmark</button>
+                    <h2>🔖 Remote Bookmarks</h2>
+                    <div class="multi-input">
+                        <input type="text" id="bmTitle" placeholder="Label">
+                        <div style="display: flex; gap: 8px;">
+                            <input type="url" id="bmUrl" placeholder="URL" style="flex: 1;">
+                            <button id="addBmBtn" style="flex: 0 0 100px;">PUSH</button>
                         </div>
-                        <ul id="bookmarksList" class="builder-list"></ul>
                     </div>
+                    <ul id="bookmarksList" class="builder-list"></ul>
                 </section>
 
-                <!-- Link Panel -->
+                <!-- Setup Instructions -->
                 <section class="card preview-card" id="linkPanel" style="display:none;">
-                    <h2>Browser Setup Instruction</h2>
-                    <p>Paste this URL into your browser's <code>config.json</code>:</p>
+                    <h2>⚙️ Browser Configuration URL</h2>
+                    <p class="helper-text">Paste this into your <code>config.json</code>'s "dashboard_url" field:</p>
                     <div class="copy-box">
                         <input type="text" id="rawUrl" readonly>
-                        <button id="copyUrlBtn">Copy</button>
+                        <button id="copyUrlBtn" class="primary-btn" style="width: auto;">COPY</button>
                     </div>
                 </section>
 
-                <!-- JSON Preview -->
+                <!-- Live JSON Preview -->
                 <section class="card preview-card">
-                    <h2>Live config.json Preview</h2>
+                    <h2>📄 Live Config Preview (Read-Only)</h2>
                     <pre id="jsonPreview"></pre>
                 </section>
             </div>
