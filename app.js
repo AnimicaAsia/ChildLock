@@ -242,4 +242,9 @@ document.addEventListener('DOMContentLoaded', () => {
     renderBookmarks();
     renderAllowedSites();
     updateWhitelistUI();
+
+    // Auto-load if token exists
+    if (ghTokenInput.value.trim()) {
+        loadFromCloud();
+    }
 });
